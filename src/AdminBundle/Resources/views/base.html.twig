@@ -151,28 +151,24 @@
 
     <div class="row">
         <div class="col-lg-12">
+
+            {% for notice in app.session.flashbag.get('notice') %}
+                <div class="alert alert-success">
+                    {{ notice }}
+                </div>
+            {% endfor %}
+
+            {% for error in app.session.flashbag.get('error') %}
+                <div class="alert alert-error">
+                    {{ error }}
+                </div>
+            {% endfor %}
+
             <h1 class="page-header">{{ page_title }}</h1>
         </div>
     </div><!--/.row-->
 
-    <div class="row">
-        <div class="col-xs-12 col-md-6 col-lg-3">
-            <div class="panel panel-blue panel-widget ">
-                <div class="row no-padding">
-                    <div class="col-sm-3 col-lg-5 widget-left">
-                        <svg class="glyph stroked bag">
-                            <use xlink:href="#stroked-bag"></use>
-                        </svg>
-                    </div>
-                    <div class="col-sm-9 col-lg-7 widget-right">
-                        <div class="large">120</div>
-                        <div class="text-muted">New Orders</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-    </div><!--/.row-->
+    {% block body %}{% endblock %}
 
 </div>    <!--/.main-->
 
