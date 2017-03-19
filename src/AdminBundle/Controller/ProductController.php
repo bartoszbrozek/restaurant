@@ -3,76 +3,115 @@
 namespace AdminBundle\Controller;
 
 use AppBundle\Entity\Product;
+use AppBundle\Form\ProductType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-use Symfony\Component\Form\Extension\Core\Type\NumberType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class ProductController extends Controller
 {
+
     /**
-     * @Route("/admin/addProduct")
+     * @Route("/admin/productsManagement", name="AdminBundle:productsManagement")
      */
-    public function addProductAction(Request $request)
+    public function productsManagementAction(Request $request)
     {
+        $products = $this->getDoctrine()
+            ->getRepository('AppBundle:Product');
+
         $product = new Product();
 
-        $form = $this->createFormBuilder($product)
-            ->add('name', TextType::class)
-            ->add('description', TextareaType::class)
-            ->add('price', NumberType::class)
-            ->add('submit', SubmitType::class, [
-                'attr' => [
-                    'class' => 'btn-lg btn-success'
-                ]
-            ])
-            ->getForm();
-
+        // Adding product
+        $form = $this->createForm(ProductType::class, $product);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $session = new Session();
+            $session = $this->container->get('session');
             $em = $this->getDoctrine()->getManager();
 
             try {
                 $em->persist($product);
                 $em->flush();
 
-                $msg = "Poprawnie dodano nowy produkt: ". $product->getName();
+                $msg = "Successfully added a new product: " . $product->getName();
                 $session->getFlashBag()->set('notice', $msg);
 
-            } catch(Doctrine_Manager_Exception $ex) {
-                $session->getFlashBag()->set('error', 'Wystąpił błąd podczas dodawania produktu.');
+                return $this->redirectToRoute('AdminBundle:productsManagement');
+            } catch (Doctrine_Manager_Exception $ex) {
+                $session->getFlashBag()->set('error', "An error has occured during adding product: $ex");
+                return $this->redirectToRoute('AdminBundle:productsManagement');
             }
         }
 
-
-        return $this->render('AdminBundle:Product:addProduct.html.twig', [
+        return $this->render('AdminBundle:Product:productsManagement.html.twig', [
+            'products' => $products->findAll(),
             'form' => $form->createView(),
-            'page_title' => 'Add new product'
+            'page_title' => 'All products in your menu'
+        ]);
+    }
+
+
+    /**
+     * @Route("/admin/editProduct/{product_id}", name="AdminBundle:editProduct")
+     */
+    public function editProductAction(Request $request, $product_id)
+    {
+        $product = $this->getDoctrine()
+            ->getRepository('AppBundle:Product')
+            ->find($product_id);
+
+        $form = $this->createForm(ProductType::class, $product);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $session = $this->container->get('session');
+            $em = $this->getDoctrine()->getManager();
+
+            try {
+                $em->persist($product);
+                $em->flush();
+
+                $msg = "Successfully updated product: " . $product->getName();
+                $session->getFlashBag()->set('notice', $msg);
+
+                return $this->redirectToRoute('AdminBundle:productsManagement');
+            } catch (Doctrine_Manager_Exception $ex) {
+                $session->getFlashBag()->set('error', "An error has occured during editing product: $ex");
+                return $this->redirectToRoute('AdminBundle:productsManagement');
+            }
+        }
+
+        return $this->render('AdminBundle:Product:editProduct.html.twig', [
+            'product' => $product,
+            'form' => $form->createView(),
+            'page_title' => 'Edit product'
         ]);
     }
 
     /**
-     * @Route("/admin/removeProduct/{product_id}")
+     * @Route("/admin/removeProduct", name="AdminBundle:removeProduct")
      */
-    public function removeProductAction(Request $request, $product_id)
+    public function removeProductAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $product = $em->getRepository('AppBundle:Product')->find($product_id);
-        try {
-            $em->remove($product);
-            $em->flush();
-        } catch (Doctrine_Manager_Exception $ex) {
-            echo $ex;
-        }
+        echo $product_id = $request->get('productId');
+        $session = $this->container->get('session');
 
-        return $this->render('AdminBundle:Default:index.html.twig', [
-            'page_title' => 'Delete specific product'
-        ]);
+        if (!empty($product_id)) {
+            try {
+                $product = $em->getRepository('AppBundle:Product')->find($product_id);
+                $em->remove($product);
+                $em->flush();
+                $session->getFlashBag()->set('notice', 'Successfully removed a selected product.');
+            } catch (Doctrine_Manager_Exception $ex) {
+                $session->getFlashBag()->set('error', "An error has occured while trying to remove product: $ex");
+            }
+            return $this->redirectToRoute('AdminBundle:productsManagement');
+        } else {
+            // if no such an id
+            $session->getFlashBag()->set('error', "An error has occured while trying to remove product: no such a product.");
+            return $this->redirectToRoute('AdminBundle:productsManagement');
+        }
     }
 }
