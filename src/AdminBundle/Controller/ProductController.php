@@ -95,7 +95,7 @@ class ProductController extends Controller
     public function removeProductAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        echo $product_id = $request->get('productId');
+        $product_id = $request->get('productId');
         $session = $this->container->get('session');
 
         if (!empty($product_id)) {
@@ -107,11 +107,10 @@ class ProductController extends Controller
             } catch (Doctrine_Manager_Exception $ex) {
                 $session->getFlashBag()->set('error', "An error has occured while trying to remove product: $ex");
             }
-            return $this->redirectToRoute('AdminBundle:productsManagement');
         } else {
             // if no such an id
             $session->getFlashBag()->set('error', "An error has occured while trying to remove product: no such a product.");
-            return $this->redirectToRoute('AdminBundle:productsManagement');
         }
+        return $this->redirectToRoute('AdminBundle:productsManagement');
     }
 }

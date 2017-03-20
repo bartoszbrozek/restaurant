@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+- phpMyAdmin XML Dump
+- version 4.5.1
+- https://www.phpmyadmin.net
+-
+- Host: 127.0.0.1
+- Generation Time: Mar 18, 2017 at 06:55 PM
+- Server version: 10.1.16-MariaDB
+- PHP Version: 7.0.9
+-->
+
+<pma_xml_export version="1.0" xmlns:pma="http://www.phpmyadmin.net/some_doc_url/">
+    <!--
+    - Structure schemas
+    -->
+    <pma:structure_schemas>
+        <pma:database name="restaurant" collation="utf8_bin" charset="utf8">
+            <pma:table name="product">
+                CREATE TABLE `product` (
+                  `products_id` int(11) NOT NULL AUTO_INCREMENT,
+                  `name` varchar(64) COLLATE utf8_bin NOT NULL,
+                  `description` varchar(64) COLLATE utf8_bin NOT NULL,
+                  `price` decimal(5,2) NOT NULL,
+                  PRIMARY KEY (`products_id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+            </pma:table>
+        </pma:database>
+    </pma:structure_schemas>
+
+    <!--
+    - Database: 'restaurant'
+    -->
+    <database name="restaurant">
+        <!-- Table product -->
+    </database>
+</pma_xml_export>
