@@ -117,4 +117,36 @@ class ProductController extends Controller
         }
         return $this->redirectToRoute('AdminBundle:productsManagement');
     }
+
+    /**
+     * @Route("/admin/showOnSite/{product_id}", name="AdminBundle:showOnSiteProduct")
+     */
+    public function showOnSiteProductAction($product_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $session = $this->container->get('session');
+
+        if (!empty($product_id)) {
+            try {
+                $product = $em->getRepository('AppBundle:Product')->find($product_id);
+                if ($product->getIsshown() == false) {
+                    $product->setIsshown(1);
+                    $msg = $product->getName() . " is now available on your website.";
+                } else {
+                    $product->setIsshown(0);
+                    $msg = $product->getName() . " is now not available on your website.";
+                }
+
+                $em->persist($product);
+                $em->flush();
+                $session->getFlashBag()->set('notice', $msg);
+            } catch (Doctrine_Manager_Exception $ex) {
+                $session->getFlashBag()->set('error', "An error has occured while trying to showing product: $ex");
+            }
+        } else {
+            // if no such an id
+            $session->getFlashBag()->set('error', "An error has occured while trying to showing product: no such a product.");
+        }
+        return $this->redirectToRoute('AdminBundle:productsManagement');
+    }
 }

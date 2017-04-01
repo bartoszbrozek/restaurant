@@ -21,17 +21,27 @@
             <tbody>
             {% for product in products %}
                 <tr>
-                    <td>{{ product.productId }}</td>
-                    <td>{{ product.name }}</td>
-                    <td>{{ product.description }}</td>
-                    <td>{{ product.price }}</td>
-                    <td>
+                    <td class="col-sm-1">{{ product.productId }}</td>
+                    <td class="col-sm-2">{{ product.name }}</td>
+                    <td class="col-xs-2 col-sm-3">{{ product.description }}</td>
+                    <td class="col-sm-1">{{ product.price }}</td>
+                    <td class="col-sm-1">
                         {% if product.category is not null %}
                             {{ product.category.name }}
                         {% endif %}
                     </td>
-                    <td>
+                    <td class="col-xs-5 col-sm-4">
                         <div class="btn-group">
+                            <a href="{{ path('AdminBundle:showOnSiteProduct', {'product_id':product.productId}) }}"
+                                    {% if product.isShown == 0 %}
+                               class="btn btn-warning">
+                                <i class="fa fa-times"></i>
+                                {% else %}
+                                    class="btn btn-success">
+                                    <i class="fa fa-check"></i>
+                                {% endif %}
+                                Show on site</a>
+
                             <a title="Edit this product"
                                href="{{ path('AdminBundle:editProduct', {'product_id':product.productId}) }}"
                                class="btn btn-primary">

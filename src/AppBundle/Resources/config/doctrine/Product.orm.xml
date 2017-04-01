@@ -12,12 +12,17 @@
         <option name="fixed"/>
       </options>
     </field>
-    <field name="description" type="string" column="description" length="64" nullable="false">
+    <field name="description" type="string" column="description" length="255" nullable="false">
       <options>
         <option name="fixed"/>
       </options>
     </field>
     <field name="price" type="decimal" column="price" precision="5" scale="2" nullable="false"/>
+    <field name="isshown" type="boolean" column="isShown" nullable="false">
+      <options>
+        <option name="default">0</option>
+      </options>
+    </field>
     <many-to-one field="category" target-entity="Category" fetch="LAZY">
       <join-columns>
         <join-column name="category_id" referenced-column-name="category_id"/>

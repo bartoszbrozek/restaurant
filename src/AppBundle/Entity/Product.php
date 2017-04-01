@@ -154,4 +154,33 @@ class Product
     {
         return $this->category;
     }
+    /**
+     * @var boolean
+     */
+    private $isshown = '0';
+
+
+    /**
+     * Set isshown
+     *
+     * @param boolean $isshown
+     *
+     * @return Product
+     */
+    public function setIsshown($isshown)
+    {
+        $this->isshown = $isshown;
+
+        return $this;
+    }
+
+    /**
+     * Get isshown
+     *
+     * @return boolean
+     */
+    public function getIsshown()
+    {
+        return $this->isshown;
+    }
 }
