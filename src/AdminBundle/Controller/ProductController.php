@@ -17,8 +17,12 @@ class ProductController extends Controller
      */
     public function productsManagementAction(Request $request)
     {
+        $time_start = microtime(true);
         $products = $this->getDoctrine()
             ->getRepository('AppBundle:Product');
+        $test = $products->findAll();
+        echo $time_elapsed = microtime(true) - $time_start;
+
 
         $product = new Product();
 
@@ -95,7 +99,7 @@ class ProductController extends Controller
     public function removeProductAction(Request $request)
     {
         $em = $this->getDoctrine()->getManager();
-        $product_id = $request->get('productId');
+        $product_id = $request->get('entityId');
         $session = $this->container->get('session');
 
         if (!empty($product_id)) {
