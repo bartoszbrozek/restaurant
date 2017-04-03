@@ -1,19 +1,54 @@
-{% if error %}
-    <div>{{ error.messageKey|trans(error.messageData, 'security') }}</div>
-{% endif %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Bootstrap Example</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
 
-<form action="{{ path('UserBundle:login') }}" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="_username" value="{{ last_username }}"/>
+<div class="container text-center">
+    {% if error %}
+        <div class="alert alert-danger">
+            {{ error.messageKey|trans(error.messageData, 'security') }}
+        </div>
+    {% endif %}
+    <h2>Sign in to admin panel</h2>
+    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">Sign in</button>
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="_password"/>
+    <div class="modal fade" id="myModal" role="dialog">
+        <div class="modal-dialog">
 
-    {#
-        If you want to control the URL the user
-        is redirected to on success (more details below)
-        <input type="hidden" name="_target_path" value="/account" />
-    #}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Enter your username and password</h4>
+                </div>
+                <div class="modal-body">
 
-    <button type="submit">login</button>
-</form>
+                    <form action="{{ path('UserBundle:login') }}" method="post">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="_username" class="form-control"
+                               value="{{ last_username }}"/>
+
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="_password" class="form-control"/>
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                        <button type="submit" class="btn btn-primary">Login</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

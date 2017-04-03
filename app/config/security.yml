@@ -28,10 +28,14 @@ security:
             form_login:
                 login_path: /admin/login
                 check_path: /admin/login
+                csrf_token_generator: security.csrf.token_manager
+            logout:
+                path: /admin/logout
+                target: /admin
 
     access_control:
         - { path: ^/admin/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/, roles: ROLE_ADMIN }
+        - { path: ^/admin, roles: ROLE_ADMIN }
             # activate different ways to authenticate
 
             # http://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate

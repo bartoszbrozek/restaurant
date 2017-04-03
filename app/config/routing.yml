@@ -10,3 +10,6 @@ app:
 user_routes:
     resource: "@UserBundle/Controller"
     type: annotation
+
+logout:
+    path: /admin/logout
