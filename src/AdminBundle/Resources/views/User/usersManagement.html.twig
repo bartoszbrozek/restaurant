@@ -1,0 +1,109 @@
+{% extends 'AdminBundle::base.html.twig' %}
+
+{% block body %}
+    <div class="col-md-12">
+        <a data-toggle="modal" title="Add a new user"
+           href="#addEntityModal" class="btn btn-primary open-AddEntityModal">
+            <i class="fa fa-plus"></i> Add a new user</a>
+    </div>
+    <div class="col-md-12">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Operations</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td class="col-sm-1">{{ user.id }}</td>
+                    <td class="col-sm-2">{{ user.username }}</td>
+                    <td class="col-sm-2">{{ user.email }}</td>
+                    <td class="col-sm-1">{{ user.role }}</td>
+                    <td class="col-xs-5 col-sm-4">
+                        <div class="btn-group">
+                            <a href="{{ path('AdminBundle:changeUserIsActive', {'user_id':user.id}) }}"
+                                    {% if user.isActive == 0 %}
+                               class="btn btn-warning">
+                                <i class="fa fa-times"></i>
+                                {% else %}
+                                    class="btn btn-success">
+                                    <i class="fa fa-check"></i>
+                                {% endif %}
+                                Is Active</a>
+
+                            <a title="Edit this user"
+                               href="{{ path('AdminBundle:editUser', {'user_id':user.id}) }}"
+                               class="btn btn-primary">
+                                <i class="fa fa-edit"></i> Edit</a>
+
+                            <a data-toggle="modal" title="Remove this user"
+                               href="#removeEntityModal" class="btn btn-danger open-RemoveEntityModal"
+                               data-id="{{ user.id }}">
+                                <i class="fa fa-remove"></i> Delete</a>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Modal Add-->
+    <div id="addEntityModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">New user</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Add a new user</p>
+                    {{ form_start(form) }}
+                    {{ form_widget(form) }}
+                    {{ form_end(form) }}
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- Modal Remove-->
+    <div id="removeEntityModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Warning</h4>
+                </div>
+                <div class="modal-body">
+                    <p>Do you really want to remove this user?</p>
+                    <form action="{{ path('AdminBundle:removeUser') }}" metho="post">
+                        <div class="btn-group">
+                            <button type="submit" class="btn btn-danger" id="entityId" name="entityId" value="">Yes
+                            </button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+{% endblock %}
