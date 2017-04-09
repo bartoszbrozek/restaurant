@@ -1,0 +1,36 @@
+
+{% if error is defined %}
+    <div class="alert alert-danger">
+        {{ error.messageKey|trans(error.messageData, 'security') }}
+    </div>
+{% endif %}
+
+<div id="login" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Login</h4>
+            </div>
+            <div class="modal-body">
+                <p>Fill fields below to login</p>
+                <form action="{{ path('UserBundle:login') }}" method="post">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="_username" class="form-control"
+                           value="{% if last_username is defined %}{{ last_username }}{% endif %}"/>
+
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="_password" class="form-control"/>
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

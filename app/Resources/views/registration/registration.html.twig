@@ -1,0 +1,23 @@
+<!-- Modal Add-->
+<div id="signIn" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Registration</h4>
+            </div>
+            <div class="modal-body">
+                <p>Fill fields below to complete your registration</p>
+                {{ form_start(form_sign_in) }}
+                {{ form_widget(form_sign_in) }}
+                {{ form_end(form_sign_in) }}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
