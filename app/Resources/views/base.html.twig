@@ -45,12 +45,30 @@
                 <a class="navbar-brand" href="#"> Restaurant Tupcio</a>
             </div>
             <ul class="nav navbar-nav navbar-right">
-                <li><a data-toggle="modal" title="Add a new product"
-                       href="#signIn" class="btn">
-                        <i class="fa fa-sign-in"></i> Sign in</a></li>
-                <li><a data-toggle="modal" title="Add a new product"
-                       href="#login" class="btn">
-                        <i class="fa fa-login"></i> Login</a></li>
+                {% if not is_granted('IS_AUTHENTICATED_REMEMBERED') %}
+                    <li>
+                        <a data-toggle="modal" title="Sign in"
+                           href="#signIn" class="btn">
+                            <i class="fa fa-user"></i> Sign up</a>
+                    </li>
+                    <li>
+                        <a data-toggle="modal" title="Login"
+                           href="#login" class="btn">
+                            <i class="fa fa-sign-in"></i> Login</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a class="btn">Welcome, {{ app.user.username }}!</a>
+                    </li>
+                    <li>
+                        <a href="#" class="btn">
+                            <i class="fa fa-shopping-cart"></i> Cart</a>
+                    </li>
+                    <li>
+                        <a href="{{ path('logout') }}" class="btn">
+                            <i class="fa fa-sign-out"></i> Logout</a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
     </nav>

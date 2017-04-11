@@ -20,37 +20,33 @@ class DefaultController extends Controller
     {
         $user = new User();
 
-        if ($this->isGranted('ROLE_USER')) {
-            // LOGIN
-        } else {
-            // SIGN IN
-            $form = $this->createForm(UserType::class, $user);
-            $form->remove('isActive');
-            $form->remove('role');
-            $form->handleRequest($request);
 
-            if ($form->isSubmitted() && $form->isValid()) {
-                $session = $this->container->get('session');
-                $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm(UserType::class, $user);
+        $form->remove('isActive');
+        $form->remove('role');
+        $form->handleRequest($request);
 
-                try {
-                    $password = $this->get('security.password_encoder')
-                        ->encodePassword($user, $user->getPassword());
-                    $user->setPassword($password);
-                    $user->setIsActive(1);
-                    $user->setRole('USER');
+        if ($form->isSubmitted() && $form->isValid()) {
+            $session = $this->container->get('session');
+            $em = $this->getDoctrine()->getManager();
 
-                    $em->persist($user);
-                    $em->flush();
+            try {
+                $password = $this->get('security.password_encoder')
+                    ->encodePassword($user, $user->getPassword());
+                $user->setPassword($password);
+                $user->setIsActive(1);
+                $user->setRole('USER');
 
-                    $msg = "Your registration has been completed successfully! Login using your username: " . $user->getUsername() . " and password.";
-                    $session->getFlashBag()->set('notice', $msg);
-                } catch (UniqueConstraintViolationException $ex) {
-                    $session->getFlashBag()->set('error', "An error has occured during registration: " . $ex->getErrorCode());
-                }
+                $em->persist($user);
+                $em->flush();
 
-                return $this->redirectToRoute('homepage');
+                $msg = "Your registration has been completed successfully! Login using your username: " . $user->getUsername() . " and password.";
+                $session->getFlashBag()->set('notice', $msg);
+            } catch (UniqueConstraintViolationException $ex) {
+                $session->getFlashBag()->set('error', "An error has occured during registration: " . $ex->getErrorCode());
             }
+
+            return $this->redirectToRoute('homepage');
         }
 
 
